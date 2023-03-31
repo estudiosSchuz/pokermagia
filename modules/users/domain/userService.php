@@ -3,7 +3,7 @@
 require_once('../../../core/db.php');
 
 
-function get($id) {
+function getId($id) {
     if(!empty($id)){
     $conexionDB = ConexionDB::getInstance('localhost', 'root', '', 'pokermagia');
     $conn = $conexionDB->conectar();
@@ -27,27 +27,33 @@ function get($id) {
         http_response_code(402);
         echo "Faltan datos";
     }
-
-
     //$conexionBD->desconectar();
 };
 
-/*
-function get($id) {
-    $arr = array(
-        array(
-            'id' => '1',
-            'email' => 'test@gmail.com',
-            'name' => 'Ivan',
-            'lastName' => 'Calderon',
-            'password' => '1234',
-            'role' => 'admin',
-            'avatar' => 'pokemon',
-        ),
-    );
-    return json_encode($arr);
-}
 
+/*
+function get() {
+    $conexionDB = ConexionDB::getInstance('localhost', 'root', '', 'pokermagia');
+    $conn = $conexionDB->conectar();
+
+    $sql = "SELECT * FROM users";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $arr = array();
+    while ($row = $result->fetch_assoc()) {
+        $arr[] = $row;
+    }
+
+    $stmt->close();
+
+    $json_resultado = json_encode($arr);
+    return $json_resultado;
+};
+*/
+
+/*
 function create() {
     $arr = array(
         array(
@@ -95,6 +101,8 @@ function create() {
     }
 }
 
+
+/*
 $arr = array(
     array(
         'id' => '1',
