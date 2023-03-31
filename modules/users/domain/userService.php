@@ -1,4 +1,38 @@
 <?php
+//require_once('/Applications/XAMPP/xamppfiles/htdocs/api-pokermagia/core/db.php');
+require_once('../../../core/db.php');
+
+
+function get($id) {
+    if(!empty($id)){
+    $conexionDB = ConexionDB::getInstance('localhost', 'root', '', 'pokermagia');
+    $conn = $conexionDB->conectar();
+    
+    $sql = "SELECT * FROM users WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $arr = array();
+    while ($row = $result->fetch_assoc()) {
+        $arr[] = $row;
+    }
+
+    $stmt->close();
+    $json_resultado = json_encode($arr);
+    return $json_resultado;
+    }else {
+        http_response_code(402);
+        echo "Faltan datos";
+    }
+
+
+    //$conexionBD->desconectar();
+};
+
+/*
 function get($id) {
     $arr = array(
         array(
@@ -14,11 +48,9 @@ function get($id) {
     return json_encode($arr);
 }
 
-
 function create() {
     $arr = array(
         array(
-            'id' => '1',
             'email' => 'test@gmail.com',
             'name' => 'Ivan',
             'lastName' => 'Calderon',
@@ -27,7 +59,6 @@ function create() {
             'avatar' => 'pokemon',
         ),
         array(
-            'id' => '2',
             'email' => 'test@gmail.com',
             'name' => 'Ivan',
             'lastName' => 'Calderon',
@@ -42,6 +73,21 @@ function create() {
         $ultimoId = end($arr)['id'];
         $nuevoDato['id'] = $ultimoId + 1;
         $arr[] = $nuevoDato;
+        
+        // Obtener la instancia única de la clase ConexionBD
+        $conexionDB = ConexionDB::getInstance('localhost', 'root', '', 'pokermagia');
+        $conexionDB->conectar();
+
+        // Insertar los datos en la tabla "usuarios"
+        $sql = "INSERT INTO users (email, name, lastName, password, role, avatar) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = $conexionDB->conectar()->prepare($sql);
+        $stmt->bind_param("ssssss", $nuevoDato['email'], $nuevoDato['name'], $nuevoDato['lastName'], $nuevoDato['password'], $nuevoDato['role'], $nuevoDato['avatar']);
+        $stmt->execute();
+
+        // Cerrar la conexión a la base de datos
+        $stmt->close();
+        $conexionBD->desconectar();
+
         return $arr;
     }else {
         http_response_code(402);
@@ -95,7 +141,6 @@ function edit($arr){
     return null;
 }
 
-
 function delete($id){
     $arr = array(
         array(
@@ -135,3 +180,4 @@ function delete($id){
     }
     return null;
 }
+*/
