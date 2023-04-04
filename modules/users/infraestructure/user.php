@@ -1,6 +1,5 @@
 <?php
     include_once('../domain/userService.php');
-    require_once('../../../core/logger.php');
 
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Get user id
@@ -23,7 +22,6 @@
         $role = $_POST['role'];
         $avatar = $_POST['avatar'];
         $resultado = create($conexion, $email, $name, $last_name, $password, $role, $avatar);
-        
         if (isset($resultado["error"])) {
             echo json_encode(array("error" => $resultado["error"]));
         } else {

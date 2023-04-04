@@ -124,7 +124,7 @@ function edit($conexion, $id, $request_body) {
     return array("id" => $id, "updated_fields" => array_keys($request_data));
 }
 
-function delete($conexion,,$id, $role = null) {
+function delete($conexion,$id, $role = null) {
     if (!is_numeric($id) || $id <= 0) {
         http_response_code(400);
         exit(json_encode(array("error" => "El ID $id debe ser un número entero mayor que cero")));
