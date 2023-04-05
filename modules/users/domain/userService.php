@@ -50,6 +50,20 @@ function create($conexion, $email, $name, $last_name, $password, $role, $avatar)
         http_response_code(400);
         exit(json_encode(array("error" => "El correo electrónico proporcionado no tiene un formato válido.")));
     }
+    // Verificar si el correo electrónico ya está registrado
+    $sql = "SELECT id FROM users WHERE email = :email";
+    $statement = $conexion->prepare($sql);
+    $statement->bindValue(":email", $email, PDO::PARAM_STR);
+    if (!$statement->execute()) {
+        http_response_code(500);
+        exit(json_encode(array("error" => "Error al buscar el correo electrónico.")));
+    }
+    if ($statement->rowCount() > 0) {
+        http_response_code(400);
+        exit(json_encode(array("error" => "El correo electrónico proporcionado ya está registrado.")));
+    }
+
+    // Insertar el nuevo usuario
     $sql = "INSERT INTO users (email, name, last_name, password, role, avatar) VALUES (:email, :name, :last_name, :password, :role, :avatar)";
     $statement = $conexion->prepare($sql);
     $statement->bindValue(":email", $email, PDO::PARAM_STR);
